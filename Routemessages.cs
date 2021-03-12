@@ -8,6 +8,7 @@ using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using AzureFunction.Models;
 using Newtonsoft.Json;
+using System;
 
 namespace AzureFunction
 {
@@ -42,10 +43,11 @@ namespace AzureFunction
                 var json = JsonConvert.SerializeObject(measurement);
 
                 cosmos = json;
+                log.LogInformation("Measurement was saved to Cosmos DB");
             }
-            catch
+            catch(Exception e)
             {
-                log.LogInformation("Unable to process Request...");
+                log.LogInformation($"Unable to process Request, Erorr:: {e.Message}");
                 cosmos = null;
             }
             
