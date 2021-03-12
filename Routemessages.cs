@@ -43,7 +43,7 @@ namespace AzureFunction
                 measurement.ConverEpochTime();
                 var json = JsonConvert.SerializeObject(measurement);
 
-                cosmos = null;
+                cosmos = json;
                 log.LogInformation($"Measurement was saved to Cosmos DB, Message:: {json}");
             }
             catch(Exception e)
