@@ -16,7 +16,7 @@ namespace AzureFunction.Models
         public void ConverEpochTime()
         {
             DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(long.Parse(epochTime));
-            MeasurementTime = dateTimeOffset.LocalDateTime;
+            MeasurementTime = dateTimeOffset.UtcDateTime;
         }
 
     }
