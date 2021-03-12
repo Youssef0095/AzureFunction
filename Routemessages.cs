@@ -17,29 +17,38 @@ namespace AzureFunction
 
         [FunctionName("Routemessages")]
         public static void Run([IoTHubTrigger("messages/events", Connection = "iothub_ehub_iothub20_2_8763167_3f6420fdd2", ConsumerGroup = "functionapp")] EventData message,
-            //[CosmosDB(databaseName: "iot20cosmosdatabas", collectionName: "Measurement", CreateIfNotExists = true, ConnectionStringSetting = "iot20cosmosdatabas")] out dynamic cosmos,
+            [CosmosDB(databaseName: "iot20cosmosdatabas", collectionName: "Measurement", CreateIfNotExists = true, ConnectionStringSetting = "iot20cosmosdatabas")] out dynamic cosmos,
             ILogger log)
         {
-            var _data = JsonConvert.DeserializeObject<dynamic>(Encoding.UTF8.GetString(message.Body.Array));
-            var _deviceId = message.SystemProperties["iothub-connection-device-id"].ToString();
-            var _deviceType = message.Properties["deviceType"].ToString();
-            var _latitude = message.Properties["latitude"].ToString();
-            var _longitude = message.Properties["longitude"].ToString();
-            var _epochTime = message.Properties["epochTime"].ToString();
-
-            var measurement = new MeasurementModel()
+            try
             {
-                deviceId = _deviceId,
-                deviceType = _deviceType,
-                epochTime = _epochTime,
-                location = new Location { latitude = _latitude, longitude = _longitude},
-                data = _data
-            };
+                var _data = JsonConvert.DeserializeObject<dynamic>(Encoding.UTF8.GetString(message.Body.Array));
+                var _deviceId = message.SystemProperties["iothub-connection-device-id"].ToString();
+                var _deviceType = message.Properties["deviceType"].ToString();
+                var _latitude = message.Properties["latitude"].ToString();
+                var _longitude = message.Properties["longitude"].ToString();
+                var _epochTime = message.Properties["epochTime"].ToString();
 
-            measurement.ConverEpochTime();
+                var measurement = new MeasurementModel()
+                {
+                    deviceId = _deviceId,
+                    deviceType = _deviceType,
+                    epochTime = _epochTime,
+                    location = new Location { latitude = _latitude, longitude = _longitude },
+                    data = _data
+                };
 
-            var json = JsonConvert.SerializeObject(measurement);
-            log.LogInformation(json);
+                measurement.ConverEpochTime();
+                var json = JsonConvert.SerializeObject(measurement);
+
+                cosmos = json;
+            }
+            catch
+            {
+                log.LogInformation("Unable to process Request...");
+                cosmos = null;
+            }
+            
         }
     }
 }
