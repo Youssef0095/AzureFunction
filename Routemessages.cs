@@ -18,7 +18,7 @@ namespace AzureFunction
 
         [FunctionName("Routemessages")]
         public static void Run([IoTHubTrigger("messages/events", Connection = "iothub_ehub_iothub20_2_8763167_3f6420fdd2", ConsumerGroup = "functionapp")] EventData message,
-            [CosmosDB(databaseName: "iot20cosmosdatabas", collectionName: "Measurement", CreateIfNotExists = true, ConnectionStringSetting = "iot20cosmosdatabas")] out dynamic cosmos,
+            [CosmosDB(databaseName: "IOT20", collectionName: "Measurement", CreateIfNotExists = true, ConnectionStringSetting = "iot20cosmosdatabas")] out dynamic cosmos,
             ILogger log)
         {
             try
