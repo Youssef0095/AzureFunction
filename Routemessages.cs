@@ -6,6 +6,8 @@ using Microsoft.Azure.EventHubs;
 using System.Text;
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
+using AzureFunction.Models;
+using Newtonsoft.Json;
 
 namespace AzureFunction
 {
@@ -14,16 +16,30 @@ namespace AzureFunction
         private static HttpClient client = new HttpClient();
 
         [FunctionName("Routemessages")]
-        public static void Run([IoTHubTrigger("messages/events", Connection = "iothub-ehub-iothub20-2-8763167-3f6420fdd2", ConsumerGroup = "functionapp")]EventData message, ILogger log)
+        public static void Run([IoTHubTrigger("messages/events", Connection = "iothub_ehub_iothub20_2_8763167_3f6420fdd2", ConsumerGroup = "functionapp")] EventData message,
+            //[CosmosDB(databaseName: "iot20cosmosdatabas", collectionName: "Measurement", CreateIfNotExists = true, ConnectionStringSetting = "iot20cosmosdatabas")] out dynamic cosmos,
+            ILogger log)
         {
-            var data = Encoding.UTF8.GetString(message.Body.Array);
-            var deviceId = message.SystemProperties["iothub-connection-device-id"].ToString();
-            var deviceType = message.Properties["deviceType"].ToString();
-            var latitude = message.Properties["latitude"].ToString();
-            var longitude = message.Properties["longitude"].ToString();
+            var _data = JsonConvert.DeserializeObject<dynamic>(Encoding.UTF8.GetString(message.Body.Array));
+            var _deviceId = message.SystemProperties["iothub-connection-device-id"].ToString();
+            var _deviceType = message.Properties["deviceType"].ToString();
+            var _latitude = message.Properties["latitude"].ToString();
+            var _longitude = message.Properties["longitude"].ToString();
+            var _epochTime = message.Properties["epochTime"].ToString();
 
+            var measurement = new MeasurementModel()
+            {
+                deviceId = _deviceId,
+                deviceType = _deviceType,
+                epochTime = _epochTime,
+                location = new Location { latitude = _latitude, longitude = _longitude},
+                data = _data
+            };
 
+            measurement.ConverEpochTime();
 
+            var json = JsonConvert.SerializeObject(measurement);
+            log.LogInformation(json);
         }
     }
 }
