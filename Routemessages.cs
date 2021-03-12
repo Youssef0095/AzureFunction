@@ -17,8 +17,9 @@ namespace AzureFunction
         private static HttpClient client = new HttpClient();
 
         [FunctionName("Routemessages")]
-        public static void Run([IoTHubTrigger("messages/events", Connection = "iothub_ehub_iothub20_2_8763167_3f6420fdd2", ConsumerGroup = "functionapp")] EventData message,
-            [CosmosDB(databaseName: "IOT20", collectionName: "Measurement", CreateIfNotExists = true, ConnectionStringSetting = "iot20cosmosdatabas")] out dynamic cosmos,
+        public static void Run([IoTHubTrigger("messages/events", Connection = "iothub-ehub-iothub20-2-8763167-3f6420fdd2", ConsumerGroup = "functionapp")] EventData message,
+            [CosmosDB(databaseName: "IOT20", collectionName: "Measurement", CreateIfNotExists = true,
+            ConnectionStringSetting = "iot20cosmosdatabas")] out dynamic cosmos,
             ILogger log)
         {
             try
@@ -50,7 +51,7 @@ namespace AzureFunction
                 log.LogInformation($"Unable to process Request, Erorr:: {e.Message}");
                 cosmos = null;
             }
-            ""
+            
         }
     }
 }
