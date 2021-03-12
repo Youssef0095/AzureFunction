@@ -43,7 +43,7 @@ namespace AzureFunction
                 var json = JsonConvert.SerializeObject(measurement);
 
                 cosmos = json;
-                log.LogInformation("Measurement was saved to Cosmos DB");
+                log.LogInformation($"Measurement was saved to Cosmos DB, Message:: {json}");
             }
             catch(Exception e)
             {
