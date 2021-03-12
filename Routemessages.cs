@@ -50,7 +50,7 @@ namespace AzureFunction
                 log.LogInformation($"Unable to process Request, Erorr:: {e.Message}");
                 cosmos = null;
             }
-            
+            ""
         }
     }
 }
