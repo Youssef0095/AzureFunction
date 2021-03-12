@@ -27,7 +27,7 @@ namespace AzureFunction.Models
         public string longitude { get; set; }
     }
 
-    public class Date
+    public class Data
     {
         public string created { get; set; }
         public float temperature { get; set; }
