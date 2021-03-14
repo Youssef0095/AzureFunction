@@ -1,0 +1,13 @@
+{
+    "deviceId": "string",
+    "deviceType": "string",
+    "location":{
+        "latitude": 0.1212121,
+        "longitude": 0.1212121
+    },
+    "data": {
+        "created": "datetime",
+        "temperature": 23.11,
+        "humidity": 44.11
+    }
+}
